@@ -1,7 +1,10 @@
 package main
 
 import (
+	"context"
+	"fmt"
 	"github.com/google/uuid"
+	"github.com/iyhunko/hash-generation-app/config"
 	"log"
 	"net/http"
 	"time"
@@ -18,12 +21,20 @@ func hashHandler(w http.ResponseWriter, r *http.Request) {
 func main() {
 	log.Println("Starting http api server")
 
-	// goroutine to launch a server on port 9000
+	// load env variables to the Config struct
+	var conf config.Config
+	config.ReadEnv(&conf)
+
+	// init http server
 	mux := http.NewServeMux()
-	// Convert the timeHandler function to a http.HandlerFunc type.
-	th := http.HandlerFunc(hashHandler)
-	// And add it to the ServeMux.
-	mux.Handle("/hash", th)
-	log.Print("Listening 9000 port...")
-	log.Fatal(http.ListenAndServe(":9000", mux))
+	mux.HandleFunc("/hash", hashHandler)
+	srv := &http.Server{
+		Handler:      mux,
+		Addr:         fmt.Sprintf(":%s", conf.HTTPServerPort),
+		WriteTimeout: conf.WriteTimeout,
+		ReadTimeout:  conf.ReadTimeout,
+	}
+
+	log.Printf("Listening to %s port...", conf.HTTPServerPort)
+	log.Fatal(context.Background(), "error listening ", srv.ListenAndServe())
 }

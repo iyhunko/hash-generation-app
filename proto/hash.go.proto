@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+option go_package = "github.com/iyhunko/hash-generation-app/grpc/hash";
+
+package hash;
+
+// Interface exported by the server.
+service HashService {
+  rpc GetHash(Hash) returns (Hash) {}
+}
+
+message Hash {
+  string time = 1;
+  string uuid = 2;
+}
+

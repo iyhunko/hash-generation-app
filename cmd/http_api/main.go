@@ -3,20 +3,12 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/google/uuid"
 	"github.com/iyhunko/hash-generation-app/config"
+	http2 "github.com/iyhunko/hash-generation-app/http"
+	"github.com/iyhunko/hash-generation-app/store"
 	"log"
 	"net/http"
-	"time"
 )
-
-func hashHandler(w http.ResponseWriter, r *http.Request) {
-	tm := time.Now().Format(time.RFC1123)
-	w.Write([]byte("The time is: " + tm))
-
-	id := uuid.New()
-	w.Write([]byte("\nGenerated UUID: " + id.String()))
-}
 
 func main() {
 	log.Println("Starting http api server")
@@ -25,11 +17,12 @@ func main() {
 	var conf config.Config
 	config.ReadEnv(&conf)
 
-	// init http server
-	mux := http.NewServeMux()
-	mux.HandleFunc("/hash", hashHandler)
+	cacheStorage := store.NewStore(conf.CacheSize, conf.HashGenerationInterval)
+
+	// init http server and router
+	router := http2.InitRouter(conf, cacheStorage)
 	srv := &http.Server{
-		Handler:      mux,
+		Handler:      router,
 		Addr:         fmt.Sprintf(":%s", conf.HTTPServerPort),
 		WriteTimeout: conf.WriteTimeout,
 		ReadTimeout:  conf.ReadTimeout,

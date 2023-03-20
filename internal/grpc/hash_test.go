@@ -1,6 +1,7 @@
 package grpc
 
 import (
+	"context"
 	config2 "github.com/iyhunko/hash-generation-app/internal/config"
 	"github.com/iyhunko/hash-generation-app/internal/proto"
 	store2 "github.com/iyhunko/hash-generation-app/internal/store"
@@ -17,7 +18,7 @@ func TestHash_GetHash(t *testing.T) {
 	t.Run("returns_empty_hash_if_no_file_present", func(t *testing.T) {
 		protoHash := hash.Hash{}
 		hashServer := NewHashServer(config, store)
-		_, err := hashServer.GetHash(nil, &protoHash)
+		_, err := hashServer.GetHash(context.Background(), &protoHash)
 		assert.Empty(t, err)
 		assert.Empty(t, protoHash.Time)
 		assert.Empty(t, protoHash.Uuid)

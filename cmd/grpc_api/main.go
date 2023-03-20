@@ -1,29 +1,14 @@
 package main
 
 import (
-	"context"
 	"fmt"
-	"github.com/google/uuid"
 	"github.com/iyhunko/hash-generation-app/config"
+	grpc2 "github.com/iyhunko/hash-generation-app/grpc"
 	pb "github.com/iyhunko/hash-generation-app/proto"
+	"google.golang.org/grpc"
 	"log"
 	"net"
-	"time"
-
-	"google.golang.org/grpc"
 )
-
-type server struct {
-	pb.UnimplementedHashServiceServer
-}
-
-// GetHash returns the current hash
-func (s *server) GetHash(ctx context.Context, hash *pb.Hash) (*pb.Hash, error) {
-	id := uuid.New()
-	tm := time.Now().Format(time.RFC1123)
-
-	return &pb.Hash{Time: tm, Uuid: id.String()}, nil
-}
 
 func main() {
 	log.Println("Starting GRPC api server")
@@ -38,7 +23,7 @@ func main() {
 	}
 
 	grpcServer := grpc.NewServer()
-	pb.RegisterHashServiceServer(grpcServer, &server{})
+	pb.RegisterHashServiceServer(grpcServer, &grpc2.Server{})
 
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %s", err)

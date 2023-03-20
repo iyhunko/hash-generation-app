@@ -1,4 +1,4 @@
 vendor
 hash.json
 bin
-interval/store/test_file_path.json
+internal/store/test_file_path.json

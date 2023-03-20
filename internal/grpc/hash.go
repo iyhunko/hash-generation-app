@@ -26,15 +26,18 @@ func NewHashServer(
 }
 
 // GetHash returns the current hash
-func (s *HashServer) GetHash(ctx context.Context, iHash *hash.Hash) (*hash.Hash, error) {
+func (s *HashServer) GetHash(ctx context.Context, pHash *hash.Hash) (*hash.Hash, error) {
 	hashBytes := s.store.Get(s.config.HashFilePath)
+	if hashBytes == nil {
+		return pHash, nil
+	}
 	fHash := entity.Hash{}
 	err := json.Unmarshal(hashBytes, &fHash)
 	if err != nil {
 		return nil, err
 	}
-	iHash.Uuid = fHash.Hash.String()
-	iHash.Time = fHash.GeneratedAt.String()
+	pHash.Uuid = fHash.Hash.String()
+	pHash.Time = fHash.GeneratedAt.String()
 
-	return iHash, nil
+	return pHash, nil
 }

@@ -3,7 +3,6 @@ package handler
 import (
 	"github.com/iyhunko/hash-generation-app/internal/config"
 	"github.com/iyhunko/hash-generation-app/internal/store"
-	"log"
 	"net/http"
 )
 
@@ -24,9 +23,14 @@ func NewHashHandler(
 
 func (hh *HashHandler) Get(w http.ResponseWriter, r *http.Request) {
 	hashBytes := hh.store.Get(hh.config.HashFilePath)
+	if hashBytes == nil {
+		http.Error(w, "Failed to fetch hash", http.StatusInternalServerError)
+		return
+	}
 
 	_, err := w.Write(hashBytes)
 	if err != nil {
-		log.Fatal("Failed to send response")
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 }

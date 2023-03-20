@@ -11,7 +11,7 @@ var (
 func TestLogger_Error(t *testing.T) {
 	lgr, _ := New()
 
-	t.Run("success", func(t *testing.T) {
+	t.Run("log_error", func(t *testing.T) {
 		lgr.Error(loggerErrorStr)
 	})
 }
@@ -19,7 +19,7 @@ func TestLogger_Error(t *testing.T) {
 func TestLogger_Info(t *testing.T) {
 	lgr, _ := New()
 
-	t.Run("success", func(t *testing.T) {
+	t.Run("log_info", func(t *testing.T) {
 		lgr.Info(loggerErrorStr)
 	})
 }
@@ -27,7 +27,7 @@ func TestLogger_Info(t *testing.T) {
 func TestLogger_Warn(t *testing.T) {
 	lgr, _ := New()
 
-	t.Run("success", func(t *testing.T) {
+	t.Run("log_warn", func(t *testing.T) {
 		lgr.Warn(loggerErrorStr)
 	})
 }

@@ -1,3 +1,4 @@
 vendor
 hash.json
 bin
+internal/store/test_file_path.json

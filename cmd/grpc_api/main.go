@@ -12,19 +12,26 @@ import (
 	"net"
 )
 
+const (
+	networkStr               = "tcp"
+	startingServerMessage    = "Starting GRPC api server"
+	failedToServeErrMessage  = "failed to serve: %s"
+	failedToListenErrMessage = "failed to listen: %v"
+)
+
 func main() {
 	lgr, err := logger.New()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
 
-	lgr.Info("Starting GRPC api server")
+	lgr.Info(startingServerMessage)
 	conf := config.NewConfig(lgr)
 	cacheStorage := store.NewStore(lgr)
 
-	lis, err := net.Listen("tcp", fmt.Sprintf(":%s", conf.GRPCServerPort))
+	lis, err := net.Listen(networkStr, fmt.Sprintf(":%s", conf.GRPCServerPort))
 	if err != nil {
-		lgr.ErrorWithExit(fmt.Sprintf("failed to listen: %v", err))
+		lgr.ErrorWithExit(fmt.Sprintf(failedToListenErrMessage, err))
 	}
 
 	grpcServer := grpc.NewServer()
@@ -32,6 +39,6 @@ func main() {
 	pb.RegisterHashServiceServer(grpcServer, &hashServer)
 
 	if err := grpcServer.Serve(lis); err != nil {
-		lgr.ErrorWithExit(fmt.Sprintf("failed to serve: %s", err))
+		lgr.ErrorWithExit(fmt.Sprintf(failedToServeErrMessage, err))
 	}
 }

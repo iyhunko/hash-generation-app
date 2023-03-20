@@ -6,7 +6,7 @@ import (
 )
 
 func TestConfig_NewConfig(t *testing.T) {
-	t.Run("default values", func(t *testing.T) {
+	t.Run("default_values", func(t *testing.T) {
 		conf := NewConfig(nil)
 		assert.Equal(t, "8001", conf.HTTPServerPort)
 		assert.Equal(t, "8002", conf.GRPCServerPort)

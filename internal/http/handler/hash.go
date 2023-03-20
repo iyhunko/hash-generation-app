@@ -6,6 +6,10 @@ import (
 	"net/http"
 )
 
+const (
+	failedToFetchMsg = "Failed to fetch hash"
+)
+
 type HashHandler struct {
 	config config.Config
 	store  store.Store
@@ -24,7 +28,7 @@ func NewHashHandler(
 func (hh *HashHandler) Get(w http.ResponseWriter, r *http.Request) {
 	hashBytes := hh.store.Get(hh.config.HashFilePath)
 	if hashBytes == nil {
-		http.Error(w, "Failed to fetch hash", http.StatusInternalServerError)
+		http.Error(w, failedToFetchMsg, http.StatusInternalServerError)
 		return
 	}
 

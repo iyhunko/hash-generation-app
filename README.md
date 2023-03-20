@@ -1,4 +1,4 @@
-## How to test this app?
+# How to play with this app?
 
 1. Run `make build` command
 2. Start a worker to refresh token every interval: `./bin/refresh_hash_worker`
@@ -18,3 +18,14 @@
 ```{"level":"info","timestamp":"2023-03-20T14:13:18.321008+02:00","message":"Uuid: f88e70cb-493a-486f-bba8-be7c63522360, Time: 2023-03-20 14:13:14.324162 +0200 EET"}```
    - see GRPC client details here: **cmd/grpc_client/main.go**
 7. Check **Makefile** to see available commands(code test, checks, build, proto etc)
+
+
+# Mocking
+Make sure you have "Gomock" installed:
+
+    `go get -u github.com/golang/mock/gomock`
+    `go install github.com/golang/mock/mockgen@v1.6.0`
+
+Example of command to generate mock file:
+
+    `mockgen -source=./pkg/logger/logger.go -destination=./pkg/mock/logger.go -package=mock`

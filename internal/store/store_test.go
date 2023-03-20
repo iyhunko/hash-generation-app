@@ -1,27 +1,28 @@
 package store
 
 import (
+	"github.com/golang/mock/gomock"
 	"github.com/iyhunko/hash-generation-app/pkg/logger"
+	"github.com/iyhunko/hash-generation-app/pkg/mock"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
 func TestStore_Get(t *testing.T) {
+	t.Run("empty_result", func(t *testing.T) {
+		mockCtrl := gomock.NewController(t)
+		defer mockCtrl.Finish()
+		mockLogger := mock.NewMockLogger(mockCtrl)
+		mockLogger.EXPECT().Warn("open test_file_path.json: no such file or directory")
+
+		storeWithMock := NewStore(mockLogger)
+		r := storeWithMock.Get("test_file_path.json")
+
+		assert.Nil(t, r)
+	})
+
 	log, _ := logger.New()
 	store := NewStore(log)
-
-	t.Run("empty_result", func(t *testing.T) {
-		r := store.Get("test_file_path.json")
-
-		assert.Nil(t, r)
-	})
-
-	t.Run("empty_result", func(t *testing.T) {
-		r := store.Get("test_file_path.json")
-
-		assert.Nil(t, r)
-	})
-
 	t.Run("non_empty_result", func(t *testing.T) {
 		r := store.Get("test_file.json")
 

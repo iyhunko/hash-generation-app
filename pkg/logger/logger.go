@@ -64,10 +64,7 @@ func (l *logger) Error(messages ...string) {
 }
 
 func (l *logger) ErrorWithExit(messages ...string) {
-	lgr := l.lgr
-	message := strings.Join(messages, " ")
-	lgr.Error(message)
-
+	l.Error(messages...)
 	os.Exit(1)
 }
 

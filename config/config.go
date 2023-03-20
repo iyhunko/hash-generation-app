@@ -1,9 +1,8 @@
 package config
 
 import (
+	"github.com/iyhunko/hash-generation-app/logger"
 	"github.com/kelseyhightower/envconfig"
-	"log"
-	"os"
 	"time"
 )
 
@@ -19,17 +18,13 @@ type Config struct {
 	HashFilePath           string        `envconfig:"HASH_FILE_PATH" default:"hash.json"`
 }
 
-func InitConfig() Config {
+func NewConfig(log logger.Logger) Config {
 	var conf Config
-	readEnv(&conf)
+
+	err := envconfig.Process("", &conf)
+	if err != nil {
+		log.ErrorWithExit(err.Error())
+	}
 
 	return conf
-}
-
-func readEnv(cfg *Config) {
-	err := envconfig.Process("", cfg)
-	if err != nil {
-		log.Println(err.Error())
-		os.Exit(1)
-	}
 }

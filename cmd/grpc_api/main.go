@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/iyhunko/hash-generation-app/config"
 	grpc2 "github.com/iyhunko/hash-generation-app/grpc"
+	"github.com/iyhunko/hash-generation-app/logger"
 	pb "github.com/iyhunko/hash-generation-app/proto"
 	"github.com/iyhunko/hash-generation-app/store"
 	"google.golang.org/grpc"
@@ -12,14 +13,18 @@ import (
 )
 
 func main() {
-	log.Println("Starting GRPC api server")
+	lgr, err := logger.New()
+	if err != nil {
+		log.Fatal(err.Error())
+	}
 
-	conf := config.InitConfig()
-	cacheStorage := store.NewStore()
+	lgr.Info("Starting GRPC api server")
+	conf := config.NewConfig(lgr)
+	cacheStorage := store.NewStore(lgr)
 
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%s", conf.GRPCServerPort))
 	if err != nil {
-		log.Fatalf("failed to listen: %v", err)
+		lgr.ErrorWithExit(fmt.Sprintf("failed to listen: %v", err))
 	}
 
 	grpcServer := grpc.NewServer()
@@ -27,6 +32,6 @@ func main() {
 	pb.RegisterHashServiceServer(grpcServer, &hashServer)
 
 	if err := grpcServer.Serve(lis); err != nil {
-		log.Fatalf("failed to serve: %s", err)
+		lgr.ErrorWithExit(fmt.Sprintf("failed to serve: %s", err))
 	}
 }

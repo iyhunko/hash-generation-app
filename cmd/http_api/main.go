@@ -1,20 +1,24 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"github.com/iyhunko/hash-generation-app/config"
 	http2 "github.com/iyhunko/hash-generation-app/http"
+	"github.com/iyhunko/hash-generation-app/logger"
 	"github.com/iyhunko/hash-generation-app/store"
 	"log"
 	"net/http"
 )
 
 func main() {
-	log.Println("Starting http api server")
+	lgr, err := logger.New()
+	if err != nil {
+		log.Fatal(err.Error())
+	}
 
-	conf := config.InitConfig()
-	cacheStorage := store.NewStore()
+	lgr.Info("Starting http api server")
+	conf := config.NewConfig(lgr)
+	cacheStorage := store.NewStore(lgr)
 
 	// init http server and router
 	router := http2.InitRouter(conf, cacheStorage)
@@ -25,6 +29,6 @@ func main() {
 		ReadTimeout:  conf.ReadTimeout,
 	}
 
-	log.Printf("Listening to %s port...", conf.HTTPServerPort)
-	log.Fatal(context.Background(), "error listening ", srv.ListenAndServe())
+	lgr.Info(fmt.Sprintf("Listening to %s port...", conf.HTTPServerPort))
+	lgr.ErrorWithExit(fmt.Sprintf("Error listening %s ", srv.ListenAndServe()))
 }

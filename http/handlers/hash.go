@@ -1,9 +1,7 @@
 package handlers
 
 import (
-	"encoding/json"
 	"github.com/iyhunko/hash-generation-app/config"
-	"github.com/iyhunko/hash-generation-app/entity"
 	"github.com/iyhunko/hash-generation-app/store"
 	"log"
 	"net/http"
@@ -26,18 +24,6 @@ func NewHashHandler(
 
 func (hh *HashHandler) Get(w http.ResponseWriter, r *http.Request) {
 	hashBytes := hh.store.Get(hh.config.HashFilePath)
-	if hashBytes == nil {
-		hash := entity.NewHash()
-		marshaledHash, err := json.Marshal(hash)
-		if err != nil {
-			log.Fatal(err.Error())
-		}
-		err = hh.store.Set(hh.config.HashFilePath, marshaledHash)
-		if err != nil {
-			log.Fatal(err.Error())
-		}
-		hashBytes = marshaledHash
-	}
 
 	_, err := w.Write(hashBytes)
 	if err != nil {

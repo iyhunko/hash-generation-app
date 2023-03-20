@@ -2,19 +2,52 @@ package grpc
 
 import (
 	"context"
-	"github.com/google/uuid"
+	"encoding/json"
+	"github.com/iyhunko/hash-generation-app/config"
+	"github.com/iyhunko/hash-generation-app/entity"
 	pb "github.com/iyhunko/hash-generation-app/proto"
-	"time"
+	"github.com/iyhunko/hash-generation-app/store"
+	"log"
 )
 
-type Server struct {
+type HashServer struct {
 	pb.UnimplementedHashServiceServer
+	config config.Config
+	store  store.Store
+}
+
+func NewHashServer(
+	config config.Config,
+	store store.Store,
+) HashServer {
+	return HashServer{
+		config: config,
+		store:  store,
+	}
 }
 
 // GetHash returns the current hash
-func (s *Server) GetHash(ctx context.Context, hash *pb.Hash) (*pb.Hash, error) {
-	id := uuid.New()
-	tm := time.Now().Format(time.RFC1123)
+func (s *HashServer) GetHash(ctx context.Context, iHash *pb.Hash) (*pb.Hash, error) {
+	hashBytes := s.store.Get(s.config.HashKeyInCash)
+	if hashBytes == nil {
+		hash := entity.NewHash()
+		marshaledHash, err := json.Marshal(hash)
+		if err != nil {
+			log.Fatal(err.Error())
+		}
+		err = s.store.Set(s.config.HashKeyInCash, marshaledHash)
+		if err != nil {
+			log.Fatal(err.Error())
+		}
+		hashBytes = marshaledHash
+	}
+	fHash := entity.Hash{}
+	err := json.Unmarshal(hashBytes, &fHash)
+	if err != nil {
+		return nil, err
+	}
+	iHash.Uuid = fHash.Hash.String()
+	iHash.Time = fHash.GeneratedAt.String()
 
-	return &pb.Hash{Time: tm, Uuid: id.String()}, nil
+	return iHash, nil
 }

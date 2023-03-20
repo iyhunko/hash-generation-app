@@ -10,6 +10,7 @@ import (
 	"log"
 )
 
+// This client is needed only for grpc_api testing
 func main() {
 	log.Println("Starting GRPC api client")
 
@@ -35,6 +36,5 @@ func main() {
 	if err != nil {
 		log.Fatalf("could not greet: %v", err)
 	}
-	log.Printf("Uuid: %s", r.GetUuid())
-	log.Printf("Time: %s", r.GetTime())
+	log.Printf("Uuid: %s, Time: %s", r.GetUuid(), r.GetTime())
 }

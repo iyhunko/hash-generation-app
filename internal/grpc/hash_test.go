@@ -14,7 +14,7 @@ func TestHash_GetHash(t *testing.T) {
 	log, _ := logger.New()
 	store := store2.NewStore(log)
 
-	t.Run("returns empty hash if no file present", func(t *testing.T) {
+	t.Run("returns_empty_hash_if_no_file_present", func(t *testing.T) {
 		protoHash := hash.Hash{}
 		hashServer := NewHashServer(config, store)
 		_, err := hashServer.GetHash(nil, &protoHash)

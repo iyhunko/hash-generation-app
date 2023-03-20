@@ -10,13 +10,19 @@ import (
 	"net/http"
 )
 
+const (
+	startingServerMsg  = "Starting http api server"
+	listeningToPortMsg = "Listening to %s port..."
+	listeningErrMsg    = "Error listening %s"
+)
+
 func main() {
 	lgr, err := logger.New()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
 
-	lgr.Info("Starting http api server")
+	lgr.Info(startingServerMsg)
 	conf := config.NewConfig(lgr)
 	cacheStorage := store.NewStore(lgr)
 
@@ -29,6 +35,6 @@ func main() {
 		ReadTimeout:  conf.ReadTimeout,
 	}
 
-	lgr.Info(fmt.Sprintf("Listening to %s port...", conf.HTTPServerPort))
-	lgr.ErrorWithExit(fmt.Sprintf("Error listening %s ", srv.ListenAndServe()))
+	lgr.Info(fmt.Sprintf(listeningToPortMsg, conf.HTTPServerPort))
+	lgr.ErrorWithExit(fmt.Sprintf(listeningErrMsg, srv.ListenAndServe()))
 }

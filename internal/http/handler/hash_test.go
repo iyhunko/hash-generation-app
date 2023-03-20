@@ -22,6 +22,6 @@ func TestHashHandler_Get(t *testing.T) {
 	t.Run("response_is_server_error", func(t *testing.T) {
 		hash.Get(rr, req)
 		assert.Equal(t, 500, rr.Code)
-		assert.NotEmpty(t, "Failed to fetch hash", rr.Body.String())
+		assert.NotEmpty(t, failedToFetchMsg, rr.Body.String())
 	})
 }

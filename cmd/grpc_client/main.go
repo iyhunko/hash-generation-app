@@ -12,6 +12,13 @@ import (
 	"log"
 )
 
+const (
+	startingClientMsg       = "Starting GRPC api client"
+	failedToConnectErrMsg   = "Failed to connect: %v"
+	failedToFetchHashErrMsg = "Failed to fetch hash: %v"
+	resultMsg               = "Uuid: %s, Time: %s"
+)
+
 // This client is needed only for grpc_api testing
 func main() {
 	lgr, err := logger.New()
@@ -19,7 +26,7 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
-	lgr.Info("Starting GRPC api client")
+	lgr.Info(startingClientMsg)
 	conf := config.NewConfig(lgr)
 
 	// Set up a connection to the server.
@@ -28,7 +35,7 @@ func main() {
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 	)
 	if err != nil {
-		lgr.ErrorWithExit(fmt.Sprintf("Failed to connect: %v", err))
+		lgr.ErrorWithExit(fmt.Sprintf(failedToConnectErrMsg, err))
 	}
 	defer conn.Close()
 
@@ -38,8 +45,8 @@ func main() {
 	defer cancel()
 	r, err := c.GetHash(ctx, &hash.Hash{})
 	if err != nil {
-		lgr.ErrorWithExit(fmt.Sprintf("Failed to fetch hash: %v", err))
+		lgr.ErrorWithExit(fmt.Sprintf(failedToFetchHashErrMsg, err))
 	}
 
-	lgr.Info(fmt.Sprintf("Uuid: %s, Time: %s", r.GetUuid(), r.GetTime()))
+	lgr.Info(fmt.Sprintf(resultMsg, r.GetUuid(), r.GetTime()))
 }

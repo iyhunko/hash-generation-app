@@ -11,13 +11,18 @@ import (
 	"time"
 )
 
+const (
+	workerStartMsg = "Starting hash_refresher worker"
+	updatedMsg     = "Updated: %s"
+)
+
 func main() {
 	lgr, err := logger.New()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
 
-	lgr.Info("Starting refresh_hash worker")
+	lgr.Info(workerStartMsg)
 	conf := config.NewConfig(lgr)
 	storage := store.NewStore(lgr)
 
@@ -31,6 +36,6 @@ func main() {
 		if err != nil {
 			lgr.ErrorWithExit(err.Error())
 		}
-		lgr.Info(fmt.Sprintf("Updated: %s", hash))
+		lgr.Info(fmt.Sprintf(updatedMsg, hash))
 	}
 }

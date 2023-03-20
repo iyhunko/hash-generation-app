@@ -13,6 +13,11 @@ fmt:
 lint:
 	golangci-lint run
 
+proto:
+	protoc --go_out=. --go_opt=paths=source_relative \
+    --go-grpc_out=. --go-grpc_opt=paths=source_relative \
+    internal/proto/hash.go.proto
+
 build:
 	go build -o bin/refresh_hash_worker ./cmd/refresh_hash_worker
 	go build -o bin/http_api ./cmd/http_api

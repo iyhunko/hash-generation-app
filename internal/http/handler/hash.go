@@ -29,5 +29,4 @@ func (hh *HashHandler) Get(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatal("Failed to send response")
 	}
-	return
 }

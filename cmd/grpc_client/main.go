@@ -6,6 +6,7 @@ import (
 	"github.com/iyhunko/hash-generation-app/internal/config"
 	"github.com/iyhunko/hash-generation-app/internal/proto"
 	"github.com/iyhunko/hash-generation-app/pkg/logger"
+
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"log"

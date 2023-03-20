@@ -14,7 +14,7 @@ func main() {
 	log.Println("Starting http api server")
 
 	conf := config.InitConfig()
-	cacheStorage := store.NewStore(conf.CacheSize, conf.HashGenerationInterval)
+	cacheStorage := store.NewStore()
 
 	// init http server and router
 	router := http2.InitRouter(conf, cacheStorage)

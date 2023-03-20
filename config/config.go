@@ -16,6 +16,7 @@ type Config struct {
 	CacheSize              int           `envconfig:"CACHE_SIZE" default:"10"`
 	HashGenerationInterval time.Duration `envconfig:"HASH_GENERATION_INTERVAL" default:"5s"`
 	HashKeyInCash          string        `envconfig:"HASH_KEY_IN_CACHE" default:"hash"`
+	HashFilePath           string        `envconfig:"HASH_FILE_PATH" default:"hash.json"`
 }
 
 func InitConfig() Config {

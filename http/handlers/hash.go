@@ -25,14 +25,14 @@ func NewHashHandler(
 }
 
 func (hh *HashHandler) Get(w http.ResponseWriter, r *http.Request) {
-	hashBytes := hh.store.Get(hh.config.HashKeyInCash)
+	hashBytes := hh.store.Get(hh.config.HashFilePath)
 	if hashBytes == nil {
 		hash := entity.NewHash()
 		marshaledHash, err := json.Marshal(hash)
 		if err != nil {
 			log.Fatal(err.Error())
 		}
-		err = hh.store.Set(hh.config.HashKeyInCash, marshaledHash)
+		err = hh.store.Set(hh.config.HashFilePath, marshaledHash)
 		if err != nil {
 			log.Fatal(err.Error())
 		}

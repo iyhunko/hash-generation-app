@@ -28,14 +28,14 @@ func NewHashServer(
 
 // GetHash returns the current hash
 func (s *HashServer) GetHash(ctx context.Context, iHash *pb.Hash) (*pb.Hash, error) {
-	hashBytes := s.store.Get(s.config.HashKeyInCash)
+	hashBytes := s.store.Get(s.config.HashFilePath)
 	if hashBytes == nil {
 		hash := entity.NewHash()
 		marshaledHash, err := json.Marshal(hash)
 		if err != nil {
 			log.Fatal(err.Error())
 		}
-		err = s.store.Set(s.config.HashKeyInCash, marshaledHash)
+		err = s.store.Set(s.config.HashFilePath, marshaledHash)
 		if err != nil {
 			log.Fatal(err.Error())
 		}

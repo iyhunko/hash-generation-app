@@ -1,43 +1,38 @@
 package store
 
 import (
-	"fmt"
 	"github.com/google/uuid"
+	"os"
 	"time"
-
-	"github.com/bluele/gcache"
 )
 
-type Cache interface {
+type Storage interface {
 	Get(key string) string
 	Set(key string, v uuid.UUID) error
 }
 
 type Store struct {
-	cache gcache.Cache
-	ttl   time.Duration
+	ttl time.Duration
 }
 
-func NewStore(size int, ttl time.Duration) Store {
-	return Store{
-		cache: gcache.New(size).Simple().Build(),
-		ttl:   ttl,
-	}
+func NewStore() Store {
+	return Store{}
 }
 
-func (s *Store) Get(key string) []byte {
-	v, err := s.cache.Get(key)
+func (s *Store) Get(filePath string) []byte {
+	fileContent, err := os.ReadFile(filePath)
 	if err != nil {
-		fmt.Println("Failed to load from cache:", err)
 		return nil
 	}
-	return v.([]byte)
+
+	return fileContent
 }
 
-func (s *Store) Set(key string, v []byte) error {
-	err := s.cache.SetWithExpire(key, v, s.ttl)
+func (s *Store) Set(filePath string, v []byte) error {
+	err := os.WriteFile(filePath, v, 0644)
 	if err != nil {
 		return err
 	}
+
 	return nil
 }

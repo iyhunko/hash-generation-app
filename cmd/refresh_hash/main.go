@@ -13,7 +13,7 @@ import (
 func main() {
 	log.Println("Starting refresh_hash worker")
 	conf := config.InitConfig()
-	cStorage := store.NewStore(conf.CacheSize, conf.HashGenerationInterval)
+	cStorage := store.NewStore()
 
 	for range time.Tick(conf.HashGenerationInterval) {
 		hash := entity.NewHash()
@@ -21,7 +21,7 @@ func main() {
 		if err != nil {
 			log.Fatal(err.Error())
 		}
-		err = cStorage.Set(conf.HashKeyInCash, marshaledHash)
+		err = cStorage.Set(conf.HashFilePath, marshaledHash)
 		if err != nil {
 			log.Fatal(err.Error())
 		}

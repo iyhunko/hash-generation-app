@@ -15,7 +15,7 @@ func main() {
 	log.Println("Starting GRPC api server")
 
 	conf := config.InitConfig()
-	cacheStorage := store.NewStore(conf.CacheSize, conf.HashGenerationInterval)
+	cacheStorage := store.NewStore()
 
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%s", conf.GRPCServerPort))
 	if err != nil {

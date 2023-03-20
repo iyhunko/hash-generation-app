@@ -3,10 +3,10 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/iyhunko/hash-generation-app/config"
-	"github.com/iyhunko/hash-generation-app/entity"
-	"github.com/iyhunko/hash-generation-app/logger"
-	"github.com/iyhunko/hash-generation-app/store"
+	"github.com/iyhunko/hash-generation-app/internal/config"
+	"github.com/iyhunko/hash-generation-app/internal/entity"
+	"github.com/iyhunko/hash-generation-app/internal/store"
+	"github.com/iyhunko/hash-generation-app/pkg/logger"
 	"log"
 	"time"
 )

@@ -3,9 +3,9 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/iyhunko/hash-generation-app/config"
-	"github.com/iyhunko/hash-generation-app/logger"
-	pb "github.com/iyhunko/hash-generation-app/proto"
+	"github.com/iyhunko/hash-generation-app/internal/config"
+	"github.com/iyhunko/hash-generation-app/internal/proto"
+	"github.com/iyhunko/hash-generation-app/pkg/logger"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"log"
@@ -31,11 +31,11 @@ func main() {
 	}
 	defer conn.Close()
 
-	c := pb.NewHashServiceClient(conn)
+	c := hash.NewHashServiceClient(conn)
 	// Contact the server and log out its response.
 	ctx, cancel := context.WithTimeout(context.Background(), conf.ReadTimeout)
 	defer cancel()
-	r, err := c.GetHash(ctx, &pb.Hash{})
+	r, err := c.GetHash(ctx, &hash.Hash{})
 	if err != nil {
 		lgr.ErrorWithExit(fmt.Sprintf("Failed to fetch hash: %v", err))
 	}

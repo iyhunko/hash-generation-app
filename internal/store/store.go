@@ -2,7 +2,7 @@ package store
 
 import (
 	"github.com/google/uuid"
-	"github.com/iyhunko/hash-generation-app/logger"
+	"github.com/iyhunko/hash-generation-app/pkg/logger"
 	"os"
 )
 

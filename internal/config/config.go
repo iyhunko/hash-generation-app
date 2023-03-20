@@ -1,7 +1,7 @@
 package config
 
 import (
-	"github.com/iyhunko/hash-generation-app/logger"
+	"github.com/iyhunko/hash-generation-app/pkg/logger"
 	"github.com/kelseyhightower/envconfig"
 	"time"
 )

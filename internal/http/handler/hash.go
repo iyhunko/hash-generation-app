@@ -1,8 +1,8 @@
-package handlers
+package handler
 
 import (
-	"github.com/iyhunko/hash-generation-app/config"
-	"github.com/iyhunko/hash-generation-app/store"
+	"github.com/iyhunko/hash-generation-app/internal/config"
+	"github.com/iyhunko/hash-generation-app/internal/store"
 	"log"
 	"net/http"
 )

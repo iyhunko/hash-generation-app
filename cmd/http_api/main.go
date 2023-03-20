@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/iyhunko/hash-generation-app/config"
-	http2 "github.com/iyhunko/hash-generation-app/http"
-	"github.com/iyhunko/hash-generation-app/logger"
-	"github.com/iyhunko/hash-generation-app/store"
+	"github.com/iyhunko/hash-generation-app/internal/config"
+	http2 "github.com/iyhunko/hash-generation-app/internal/http"
+	"github.com/iyhunko/hash-generation-app/internal/store"
+	"github.com/iyhunko/hash-generation-app/pkg/logger"
 	"log"
 	"net/http"
 )

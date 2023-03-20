@@ -2,11 +2,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/iyhunko/hash-generation-app/config"
-	grpc2 "github.com/iyhunko/hash-generation-app/grpc"
-	"github.com/iyhunko/hash-generation-app/logger"
-	pb "github.com/iyhunko/hash-generation-app/proto"
-	"github.com/iyhunko/hash-generation-app/store"
+	"github.com/iyhunko/hash-generation-app/internal/config"
+	grpc2 "github.com/iyhunko/hash-generation-app/internal/grpc"
+	pb "github.com/iyhunko/hash-generation-app/internal/proto"
+	"github.com/iyhunko/hash-generation-app/internal/store"
+	"github.com/iyhunko/hash-generation-app/pkg/logger"
 	"google.golang.org/grpc"
 	"log"
 	"net"

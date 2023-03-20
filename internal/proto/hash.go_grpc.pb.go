@@ -97,5 +97,5 @@ var HashService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "proto/hash.go.proto",
+	Metadata: "internal/proto/hash.go.proto",
 }

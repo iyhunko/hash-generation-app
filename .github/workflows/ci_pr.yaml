@@ -19,10 +19,13 @@ jobs:
         run: go mod vendor
 
       - name: Build
-        run: go build -o main
+        run: |
+          go build -o bin/refresh_hash_worker ./cmd/refresh_hash_worker
+          go build -o bin/http_api ./cmd/http_api
+          go build -o bin/grpc_api ./cmd/grpc_api
+          go build -o bin/grpc_client ./cmd/grpc_client
 
       - name: Test
-        working-directory: ./backend/src
         run: make test
 
   Linter:

@@ -14,10 +14,7 @@ import (
 func main() {
 	log.Println("Starting GRPC api server")
 
-	// load env variables to the Config struct
-	var conf config.Config
-	config.ReadEnv(&conf)
-
+	conf := config.InitConfig()
 	cacheStorage := store.NewStore(conf.CacheSize, conf.HashGenerationInterval)
 
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%s", conf.GRPCServerPort))

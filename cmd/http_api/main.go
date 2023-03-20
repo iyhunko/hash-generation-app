@@ -13,10 +13,7 @@ import (
 func main() {
 	log.Println("Starting http api server")
 
-	// load env variables to the Config struct
-	var conf config.Config
-	config.ReadEnv(&conf)
-
+	conf := config.InitConfig()
 	cacheStorage := store.NewStore(conf.CacheSize, conf.HashGenerationInterval)
 
 	// init http server and router

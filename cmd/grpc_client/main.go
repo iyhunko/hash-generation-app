@@ -14,9 +14,7 @@ import (
 func main() {
 	log.Println("Starting GRPC api client")
 
-	// load env variables to the Config struct
-	var conf config.Config
-	config.ReadEnv(&conf)
+	conf := config.InitConfig()
 
 	// Set up a connection to the server.
 	conn, err := grpc.Dial(

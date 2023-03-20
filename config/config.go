@@ -18,7 +18,14 @@ type Config struct {
 	HashKeyInCash          string        `envconfig:"HASH_KEY_IN_CACHE" default:"hash"`
 }
 
-func ReadEnv(cfg *Config) {
+func InitConfig() Config {
+	var conf Config
+	readEnv(&conf)
+
+	return conf
+}
+
+func readEnv(cfg *Config) {
 	err := envconfig.Process("", cfg)
 	if err != nil {
 		log.Println(err.Error())

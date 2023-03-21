@@ -27,15 +27,23 @@ func main() {
 	storage := store.NewStore(lgr)
 
 	for range time.Tick(conf.HashGenerationInterval) {
-		hash := entity.NewHash()
-		marshaledHash, err := json.Marshal(hash)
+		err = refreshHash(lgr, conf, storage)
 		if err != nil {
 			lgr.ErrorWithExit(err.Error())
 		}
-		err = storage.Set(conf.HashFilePath, marshaledHash)
-		if err != nil {
-			lgr.ErrorWithExit(err.Error())
-		}
-		lgr.Info(fmt.Sprintf(updatedMsg, hash))
 	}
+}
+
+func refreshHash(lgr logger.Logger, conf config.Config, storage store.Storage) error {
+	hash := entity.NewHash()
+	marshaledHash, err := json.Marshal(hash)
+	if err != nil {
+		return err
+	}
+	err = storage.Set(conf.HashFilePath, marshaledHash)
+	if err != nil {
+		return err
+	}
+	lgr.Info(fmt.Sprintf(updatedMsg, hash))
+	return nil
 }

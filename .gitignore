@@ -2,3 +2,4 @@ vendor
 hash.json
 bin
 internal/store/test_file_path.json
+cmd/refresh_hash_worker/test_hash.json

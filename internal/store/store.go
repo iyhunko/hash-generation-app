@@ -1,14 +1,13 @@
 package store
 
 import (
-	"github.com/google/uuid"
 	"github.com/iyhunko/hash-generation-app/pkg/logger"
 	"os"
 )
 
 type Storage interface {
-	Get(key string) string
-	Set(key string, v uuid.UUID) error
+	Get(filePath string) []byte
+	Set(filePath string, v []byte) error
 }
 
 type Store struct {
@@ -19,7 +18,7 @@ func NewStore(log logger.Logger) Store {
 	return Store{log: log}
 }
 
-func (s *Store) Get(filePath string) []byte {
+func (s Store) Get(filePath string) []byte {
 	fileContent, err := os.ReadFile(filePath)
 	if err != nil {
 		s.log.Warn(err.Error())
@@ -29,7 +28,7 @@ func (s *Store) Get(filePath string) []byte {
 	return fileContent
 }
 
-func (s *Store) Set(filePath string, v []byte) error {
+func (s Store) Set(filePath string, v []byte) error {
 	err := os.WriteFile(filePath, v, 0644)
 	if err != nil {
 		return err

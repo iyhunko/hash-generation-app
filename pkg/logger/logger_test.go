@@ -1,22 +1,23 @@
 package logger
 
 import (
+	"errors"
 	"os"
 	"os/exec"
 	"testing"
 )
 
 var (
-	loggerErrorStr = "some error"
+	loggerError = errors.New("some error")
 )
 
-func TestLogger_ErrorWithExit(t *testing.T) {
+func TestLogger_FatalError(t *testing.T) {
 	lgr, _ := New()
 	if os.Getenv("CRASH") == "1" {
-		lgr.ErrorWithExit(loggerErrorStr)
+		lgr.FatalError(loggerError)
 		return
 	}
-	cmd := exec.Command(os.Args[0], "test -test.run=TestLogger_ErrorWithExit")
+	cmd := exec.Command(os.Args[0], "test -test.run=TestLogger_FatalError")
 	cmd.Env = append(os.Environ(), "CRASH=1")
 	err := cmd.Run()
 
@@ -30,7 +31,7 @@ func TestLogger_Error(t *testing.T) {
 	lgr, _ := New()
 
 	t.Run("log_error", func(t *testing.T) {
-		lgr.Error(loggerErrorStr)
+		lgr.Error(loggerError.Error())
 	})
 }
 
@@ -38,7 +39,7 @@ func TestLogger_Info(t *testing.T) {
 	lgr, _ := New()
 
 	t.Run("log_info", func(t *testing.T) {
-		lgr.Info(loggerErrorStr)
+		lgr.Info(loggerError.Error())
 	})
 }
 
@@ -46,6 +47,6 @@ func TestLogger_Warn(t *testing.T) {
 	lgr, _ := New()
 
 	t.Run("log_warn", func(t *testing.T) {
-		lgr.Warn(loggerErrorStr)
+		lgr.Warn(loggerError.Error())
 	})
 }

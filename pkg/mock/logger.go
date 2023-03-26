@@ -50,20 +50,16 @@ func (mr *MockLoggerMockRecorder) Error(messages ...interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Error", reflect.TypeOf((*MockLogger)(nil).Error), messages...)
 }
 
-// ErrorWithExit mocks base method.
-func (m *MockLogger) ErrorWithExit(messages ...string) {
+// FatalError mocks base method.
+func (m *MockLogger) FatalError(err error) {
 	m.ctrl.T.Helper()
-	varargs := []interface{}{}
-	for _, a := range messages {
-		varargs = append(varargs, a)
-	}
-	m.ctrl.Call(m, "ErrorWithExit", varargs...)
+	m.ctrl.Call(m, "FatalError", err)
 }
 
-// ErrorWithExit indicates an expected call of ErrorWithExit.
-func (mr *MockLoggerMockRecorder) ErrorWithExit(messages ...interface{}) *gomock.Call {
+// FatalError indicates an expected call of FatalError.
+func (mr *MockLoggerMockRecorder) FatalError(err interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ErrorWithExit", reflect.TypeOf((*MockLogger)(nil).ErrorWithExit), messages...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FatalError", reflect.TypeOf((*MockLogger)(nil).FatalError), err)
 }
 
 // Info mocks base method.

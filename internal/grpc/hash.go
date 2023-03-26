@@ -3,6 +3,7 @@ package grpc
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"github.com/iyhunko/hash-generation-app/internal/config"
 	"github.com/iyhunko/hash-generation-app/internal/entity"
 	"github.com/iyhunko/hash-generation-app/internal/proto"
@@ -34,7 +35,7 @@ func (s *HashServer) GetHash(ctx context.Context, pHash *hash.Hash) (*hash.Hash,
 	fHash := entity.Hash{}
 	err := json.Unmarshal(hashBytes, &fHash)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to unmarshal file bytes: %w", err)
 	}
 	pHash.Uuid = fHash.Hash.String()
 	pHash.Time = fHash.GeneratedAt.String()

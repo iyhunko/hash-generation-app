@@ -22,7 +22,7 @@ const (
 func main() {
 	lgr, err := logger.New()
 	if err != nil {
-		log.Fatal(err.Error())
+		log.Fatalf("failed to init create logger: %v.", err)
 	}
 
 	lgr.Info(startingServerMessage)
@@ -31,7 +31,7 @@ func main() {
 
 	lis, err := net.Listen(networkStr, fmt.Sprintf(":%s", conf.GRPCServerPort))
 	if err != nil {
-		lgr.ErrorWithExit(fmt.Sprintf(failedToListenErrMessage, err))
+		lgr.FatalError(fmt.Errorf(failedToListenErrMessage, err))
 	}
 
 	grpcServer := grpc.NewServer()
@@ -39,6 +39,6 @@ func main() {
 	pb.RegisterHashServiceServer(grpcServer, &hashServer)
 
 	if err := grpcServer.Serve(lis); err != nil {
-		lgr.ErrorWithExit(fmt.Sprintf(failedToServeErrMessage, err))
+		lgr.FatalError(fmt.Errorf(failedToServeErrMessage, err))
 	}
 }

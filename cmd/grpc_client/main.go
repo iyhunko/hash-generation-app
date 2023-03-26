@@ -14,8 +14,8 @@ import (
 
 const (
 	startingClientMsg       = "Starting GRPC api client"
-	failedToConnectErrMsg   = "Failed to connect: %v"
-	failedToFetchHashErrMsg = "Failed to fetch hash: %v"
+	failedToConnectErrMsg   = "failed to connect: %v"
+	failedToFetchHashErrMsg = "failed to fetch hash: %v"
 	resultMsg               = "Uuid: %s, Time: %s"
 )
 
@@ -23,7 +23,7 @@ const (
 func main() {
 	lgr, err := logger.New()
 	if err != nil {
-		log.Fatal(err.Error())
+		log.Fatalf("Failed to init create logger: %v.", err)
 	}
 
 	lgr.Info(startingClientMsg)
@@ -35,7 +35,7 @@ func main() {
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 	)
 	if err != nil {
-		lgr.ErrorWithExit(fmt.Sprintf(failedToConnectErrMsg, err))
+		lgr.FatalError(fmt.Errorf(failedToConnectErrMsg, err))
 	}
 	defer conn.Close()
 
@@ -45,7 +45,7 @@ func main() {
 	defer cancel()
 	r, err := c.GetHash(ctx, &hash.Hash{})
 	if err != nil {
-		lgr.ErrorWithExit(fmt.Sprintf(failedToFetchHashErrMsg, err))
+		lgr.FatalError(fmt.Errorf(failedToFetchHashErrMsg, err))
 	}
 
 	lgr.Info(fmt.Sprintf(resultMsg, r.GetUuid(), r.GetTime()))

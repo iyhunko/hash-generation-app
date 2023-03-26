@@ -27,6 +27,6 @@ func TestMain_RefreshHash(t *testing.T) {
 		conf.HashFilePath = ""
 
 		err := refreshHash(lgr, conf, storage)
-		assert.Equal(t, "open : no such file or directory", err.Error())
+		assert.Equal(t, "failed to set value to storage: failed to set value to store: open : no such file or directory", err.Error())
 	})
 }

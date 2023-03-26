@@ -1,6 +1,7 @@
 package store
 
 import (
+	"fmt"
 	"github.com/iyhunko/hash-generation-app/pkg/logger"
 	"os"
 )
@@ -19,6 +20,7 @@ func NewStore(log logger.Logger) Store {
 }
 
 func (s Store) Get(filePath string) []byte {
+	//TODO: should be refactored
 	fileContent, err := os.ReadFile(filePath)
 	if err != nil {
 		s.log.Warn(err.Error())
@@ -31,7 +33,7 @@ func (s Store) Get(filePath string) []byte {
 func (s Store) Set(filePath string, v []byte) error {
 	err := os.WriteFile(filePath, v, 0644)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to set value to store: %w", err)
 	}
 
 	return nil

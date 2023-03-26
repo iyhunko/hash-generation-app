@@ -18,10 +18,10 @@ type Config struct {
 
 func NewConfig(log logger.Logger) Config {
 	var conf Config
-
+	// TODO: refactor
 	err := envconfig.Process("", &conf)
 	if err != nil {
-		log.ErrorWithExit(err.Error())
+		log.FatalError(err)
 	}
 
 	return conf

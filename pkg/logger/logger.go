@@ -1,6 +1,7 @@
 package logger
 
 import (
+	"fmt"
 	"os"
 	"strings"
 
@@ -17,7 +18,7 @@ const (
 type Logger interface {
 	Warn(messages ...string)
 	Error(messages ...string)
-	ErrorWithExit(messages ...string)
+	FatalError(err error)
 	Info(messages ...string)
 	WithStackTrace(directory string) Logger
 }
@@ -49,7 +50,7 @@ func New() (Logger, error) {
 		ErrorOutputPaths: []string{"stderr"},
 	}.Build()
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to init zap logger: %w", err)
 	}
 	l := &logger{lgr: zapLogger}
 
@@ -63,8 +64,8 @@ func (l *logger) Error(messages ...string) {
 	lgr.Error(message)
 }
 
-func (l *logger) ErrorWithExit(messages ...string) {
-	l.Error(messages...)
+func (l *logger) FatalError(err error) {
+	l.Error(fmt.Sprintf("%v", err))
 	os.Exit(1)
 }
 
@@ -80,8 +81,8 @@ func (l *logger) Warn(messages ...string) {
 	lgr.Warn(message)
 }
 
-func (l *logger) WithStackTrace(directory string) Logger {
+func (l *logger) WithStackTrace(errMsg string) Logger {
 	return &logger{lgr: l.lgr.With(
-		zap.String(stacktraceParam, directory),
+		zap.String(stacktraceParam, errMsg),
 	)}
 }

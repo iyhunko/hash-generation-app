@@ -13,13 +13,13 @@ import (
 const (
 	startingServerMsg  = "Starting http api server"
 	listeningToPortMsg = "Listening to %s port..."
-	listeningErrMsg    = "Error listening %s"
+	listeningErrMsg    = "error listening %s"
 )
 
 func main() {
 	lgr, err := logger.New()
 	if err != nil {
-		log.Fatal(err.Error())
+		log.Fatalf("failed to init create logger: %v.", err)
 	}
 
 	lgr.Info(startingServerMsg)
@@ -36,5 +36,5 @@ func main() {
 	}
 
 	lgr.Info(fmt.Sprintf(listeningToPortMsg, conf.HTTPServerPort))
-	lgr.ErrorWithExit(fmt.Sprintf(listeningErrMsg, srv.ListenAndServe()))
+	lgr.FatalError(fmt.Errorf(listeningErrMsg, srv.ListenAndServe()))
 }

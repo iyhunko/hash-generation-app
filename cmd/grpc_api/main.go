@@ -58,7 +58,7 @@ func startServer(srv *grpc.Server, lis net.Listener, lgr logger.Logger) {
 }
 
 func shutdown(ctx context.Context, server *grpc.Server, lgr logger.Logger) {
-	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	_, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 
 	server.GracefulStop()

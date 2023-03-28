@@ -16,7 +16,7 @@ func TestMain_RefreshHash(t *testing.T) {
 	conf.HashFilePath = "test_hash.json"
 
 	t.Run("success_hash_refresh", func(t *testing.T) {
-		err := refreshHash(lgr, conf, storage)
+		err := refreshHash(conf, storage)
 		assert.Empty(t, err)
 
 		_, err = os.OpenFile(conf.HashFilePath, os.O_RDWR, 0644)
@@ -26,7 +26,7 @@ func TestMain_RefreshHash(t *testing.T) {
 	t.Run("fail_empty_path", func(t *testing.T) {
 		conf.HashFilePath = ""
 
-		err := refreshHash(lgr, conf, storage)
+		err := refreshHash(conf, storage)
 		assert.Equal(t, "failed to set value to storage: failed to set value to store: open : no such file or directory", err.Error())
 	})
 }

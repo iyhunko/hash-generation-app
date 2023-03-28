@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"github.com/iyhunko/hash-generation-app/internal/config"
 	grpc2 "github.com/iyhunko/hash-generation-app/internal/grpc"
@@ -10,6 +11,10 @@ import (
 	"google.golang.org/grpc"
 	"log"
 	"net"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 )
 
 const (
@@ -24,11 +29,10 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to init create logger: %v.", err)
 	}
-
-	lgr.Info(startingServerMessage)
 	conf := config.NewConfig(lgr)
 	cacheStorage := store.NewStore(lgr)
 
+	lgr.Info(startingServerMessage)
 	lis, err := net.Listen(networkStr, fmt.Sprintf(":%s", conf.GRPCServerPort))
 	if err != nil {
 		lgr.FatalError(fmt.Errorf(failedToListenErrMessage, err))
@@ -38,7 +42,26 @@ func main() {
 	hashServer := grpc2.NewHashServer(conf, cacheStorage)
 	pb.RegisterHashServiceServer(grpcServer, &hashServer)
 
-	if err := grpcServer.Serve(lis); err != nil {
+	done := make(chan os.Signal, 1)
+	signal.Notify(done, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
+	go startServer(grpcServer, lis, lgr)
+
+	<-done
+	lgr.Info("server stopped")
+	shutdown(context.Background(), grpcServer, lgr)
+}
+
+func startServer(srv *grpc.Server, lis net.Listener, lgr logger.Logger) {
+	if err := srv.Serve(lis); err != nil {
 		lgr.FatalError(fmt.Errorf(failedToServeErrMessage, err))
 	}
+}
+
+func shutdown(ctx context.Context, server *grpc.Server, lgr logger.Logger) {
+	_, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	server.GracefulStop()
+
+	lgr.Info("Server shutdown done")
 }

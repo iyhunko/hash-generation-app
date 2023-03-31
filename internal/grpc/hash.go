@@ -13,12 +13,12 @@ import (
 type HashServer struct {
 	hash.UnimplementedHashServiceServer
 	config config.Config
-	store  store.Store
+	store  store.Storage
 }
 
 func NewHashServer(
 	config config.Config,
-	store store.Store,
+	store store.Storage,
 ) HashServer {
 	return HashServer{
 		config: config,

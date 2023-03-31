@@ -7,7 +7,7 @@ import (
 	"github.com/iyhunko/hash-generation-app/internal/entity"
 	"github.com/iyhunko/hash-generation-app/internal/store"
 	"github.com/iyhunko/hash-generation-app/pkg/logger"
-	"log"
+	dLog "log"
 	"os"
 	"os/signal"
 	"syscall"
@@ -18,16 +18,24 @@ const (
 	workerStartMsg = "Starting hash_refresher worker"
 )
 
-func main() {
-	lgr, err := logger.New()
+var lgr logger.Logger
+var conf config.Config
+var cStorage store.Storage
+
+func init() {
+	nl, err := logger.New()
 	if err != nil {
-		log.Fatalf("failed to init create logger: %v.", err)
+		dLog.Fatalf("failed to init create logger: %v.", err)
 	}
+	lgr = nl
 
+	conf = config.NewConfig(lgr)
+
+	cStorage = store.NewStore(lgr)
+}
+
+func main() {
 	lgr.Info(workerStartMsg)
-	conf := config.NewConfig(lgr)
-	storage := store.NewStore(lgr)
-
 	ticker := time.NewTicker(conf.HashGenerationInterval)
 	done := make(chan bool)
 	go func() {
@@ -37,7 +45,7 @@ func main() {
 				return
 			case t := <-ticker.C:
 				lgr.Info(fmt.Sprintf("Updated at %+v", t))
-				err = refreshHash(conf, storage)
+				err := refreshHash(conf, cStorage)
 				if err != nil {
 					lgr.FatalError(err)
 				}

@@ -9,7 +9,7 @@ import (
 	"github.com/iyhunko/hash-generation-app/internal/store"
 	"github.com/iyhunko/hash-generation-app/pkg/logger"
 	"google.golang.org/grpc"
-	"log"
+	dLog "log"
 	"net"
 	"os"
 	"os/signal"
@@ -24,14 +24,23 @@ const (
 	failedToListenErrMessage = "failed to listen: %v"
 )
 
-func main() {
-	lgr, err := logger.New()
-	if err != nil {
-		log.Fatalf("failed to init create logger: %v.", err)
-	}
-	conf := config.NewConfig(lgr)
-	cacheStorage := store.NewStore(lgr)
+var lgr logger.Logger
+var conf config.Config
+var cStorage store.Storage
 
+func init() {
+	nl, err := logger.New()
+	if err != nil {
+		dLog.Fatalf("failed to init create logger: %v.", err)
+	}
+	lgr = nl
+
+	conf = config.NewConfig(lgr)
+
+	cStorage = store.NewStore(lgr)
+}
+
+func main() {
 	lgr.Info(startingServerMessage)
 	lis, err := net.Listen(networkStr, fmt.Sprintf(":%s", conf.GRPCServerPort))
 	if err != nil {
@@ -39,7 +48,7 @@ func main() {
 	}
 
 	grpcServer := grpc.NewServer()
-	hashServer := grpc2.NewHashServer(conf, cacheStorage)
+	hashServer := grpc2.NewHashServer(conf, cStorage)
 	pb.RegisterHashServiceServer(grpcServer, &hashServer)
 
 	done := make(chan os.Signal, 1)

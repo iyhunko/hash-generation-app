@@ -12,12 +12,12 @@ const (
 
 type HashHandler struct {
 	config config.Config
-	store  store.Store
+	store  store.Storage
 }
 
 func NewHashHandler(
 	config config.Config,
-	store store.Store,
+	store store.Storage,
 ) HashHandler {
 	return HashHandler{
 		config: config,

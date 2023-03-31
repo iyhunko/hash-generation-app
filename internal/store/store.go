@@ -15,7 +15,7 @@ type Store struct {
 	log logger.Logger
 }
 
-func NewStore(log logger.Logger) Store {
+func NewStore(log logger.Logger) Storage {
 	return Store{log: log}
 }
 

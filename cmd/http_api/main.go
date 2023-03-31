@@ -8,7 +8,7 @@ import (
 	http2 "github.com/iyhunko/hash-generation-app/internal/http"
 	"github.com/iyhunko/hash-generation-app/internal/store"
 	"github.com/iyhunko/hash-generation-app/pkg/logger"
-	"log"
+	dLog "log"
 	"net/http"
 	"os"
 	"os/signal"
@@ -21,18 +21,25 @@ const (
 	listeningErrMsg   = "error listening %w"
 )
 
-func main() {
-	lgr, err := logger.New()
+var lgr logger.Logger
+var conf config.Config
+var cStorage store.Storage
+
+func init() {
+	nl, err := logger.New()
 	if err != nil {
-		log.Fatalf("failed to init create logger: %v.", err)
+		dLog.Fatalf("failed to init create logger: %v.", err)
 	}
+	lgr = nl
 
+	conf = config.NewConfig(lgr)
+
+	cStorage = store.NewStore(lgr)
+}
+
+func main() {
 	lgr.Info(startingServerMsg)
-	conf := config.NewConfig(lgr)
-	cacheStorage := store.NewStore(lgr)
-
-	// init http server and router
-	router := http2.InitRouter(conf, cacheStorage)
+	router := http2.InitRouter(conf, cStorage)
 	srv := &http.Server{
 		Handler:      router,
 		Addr:         fmt.Sprintf(":%s", conf.HTTPServerPort),
@@ -45,7 +52,6 @@ func main() {
 	go startServer(srv, lgr)
 
 	<-done
-	lgr.Info("server stopped")
 	shutdown(context.Background(), srv, lgr)
 }
 

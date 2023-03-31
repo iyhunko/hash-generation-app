@@ -9,7 +9,7 @@ import (
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
-	"log"
+	dLog "log"
 )
 
 const (
@@ -19,16 +19,22 @@ const (
 	resultMsg               = "Uuid: %s, Time: %s"
 )
 
+var lgr logger.Logger
+var conf config.Config
+
+func init() {
+	nl, err := logger.New()
+	if err != nil {
+		dLog.Fatalf("failed to init create logger: %v.", err)
+	}
+	lgr = nl
+
+	conf = config.NewConfig(lgr)
+}
+
 // This client is needed only for grpc_api testing
 func main() {
-	lgr, err := logger.New()
-	if err != nil {
-		log.Fatalf("Failed to init create logger: %v.", err)
-	}
-
 	lgr.Info(startingClientMsg)
-	conf := config.NewConfig(lgr)
-
 	// Set up a connection to the server.
 	conn, err := grpc.Dial(
 		fmt.Sprintf(":%s", conf.GRPCServerPort),

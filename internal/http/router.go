@@ -10,7 +10,7 @@ import (
 
 func InitRouter(
 	config config.Config,
-	store store.Store,
+	store store.Storage,
 ) http.Handler {
 	router := mux.NewRouter().StrictSlash(true)
 

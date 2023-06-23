@@ -41,4 +41,3 @@ jobs:
 
       - name: Lint code
         uses: golangci/golangci-lint-action@v3
-
